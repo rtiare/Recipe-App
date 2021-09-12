@@ -7,15 +7,11 @@ import {
   Image,
   Dimensions,
   TouchableHighlight,
-  SafeAreaView,
   FlatList,
 } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { Button } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
-
 import { useSelector, useDispatch } from "react-redux";
-
 import {toggleFavorite} from '../Store/actions/actionTypes';
 
 const { width: viewportWidth } = Dimensions.get("window");
@@ -30,17 +26,25 @@ const RecipeDetail = (props) => {
 
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // array
-  recipes.find((recipe) => recipe.id === recipeId);
-  // object
-  const recipe = recipes[recipeId];
+  // fin object with mathcing recipe id in array
+  const recipe = recipes.find(recipe => recipe.recipeId === recipeId); 
 
   const category = categories[recipe.categoryId];
-  console.log("--  " + category.name);
+  
+  //use redux hook(setter/getter) to set/update favorites
+  const favoriteRecipes = useSelector((state) => state.listFavorites.favoriteRecipes); 
+  const favorite = favoriteRecipes.find(recipe => recipe.recipeId === recipeId);   
+  const [fav, setFav] = useState('favorite-border');
 
   //toggle favorite
   const toggleFavorites = (recipeId) =>
     dispatch({ type: toggleFavorite, recipeId: recipeId });
+
+  useEffect(() => {
+    if(favorite !== undefined){
+      setFav('favorite');
+    }
+  }, []);
 
   const renderImage = ({ item }) => (
     <TouchableHighlight>
@@ -55,7 +59,7 @@ const RecipeDetail = (props) => {
       <View style={styles.carouselContainer}>
         <View style={styles.carousel}>
           <Carousel
-            layout={"tinder"}
+            layout={"default"}
             layoutCardOffset={`9`}
             ref={(c) => {
               _carousel = c;
@@ -85,61 +89,59 @@ const RecipeDetail = (props) => {
           />
         </View>
       </View>
-      <View>
+      <View style={styles.infoRecipeContainer}>
         <Text style={styles.infoRecipeName}>{recipe.title}</Text>
-        <Button
-          icon={<MaterialIcons name="favorite-border" size={24} color="white"/>}
-          onPress={() => toggleFavorites(recipe.recipeId)}
-        />
-        <View style={styles.infoContainer}>
-          <Image
-            style={styles.infoPhoto}
-            source={require("../assets/icons/time.png")}
-          />
-          <Text style={styles.infoRecipe}>
-            Cook Time: {recipe.time} minutes{" "}
-          </Text>
-        </View>
-        <View>
+        <Text style={styles.infoCategoryName}>{category.name}</Text>
+      </View>       
+      <View style={styles.infoContainer}>
+        <Image style={styles.infoPhoto} source={require("../assets/icons/time.png")} />
+        <Text style={styles.infoRecipe}> Cook Time : {recipe.time} minutes{" "} </Text>
+      </View>
+      <View style={styles.infoFavoriteContainer}>    
+      <TouchableOpacity  onPress={() => { toggleFavorites(recipe.recipeId); setFav('favorite'); }}>
+         <MaterialIcons name={fav} size={30} color='#2cd18a' />
+      </TouchableOpacity>
+      </View> 
+      <View style={styles.infoDescriptionRecipe}>
+        <View style={styles.infoIngredientsRecipe}>
           <Text style={styles.subTittle}>Ingredients:{"\n"}</Text>
           <FlatList
             style={styles.infoDescriptionRecipe}
-            nestedScrollEnabled={true}
+            //nestedScrollEnabled={true}
+            scrollEnabled= {false}
             data={recipe.ingredients}
-            renderItem={({ item }) => (
-              <Text>
-                {"\u27A4"} {"\t" + item.key}
-              </Text>
-            )}
+            renderItem={renderIngredients}
           />
+        </View>
+        <View style={styles.infoDirectionsRecipe}>
           <Text style={styles.subTittle}>Directions:{"\n"}</Text>
-          <Text style={styles.infoDescriptionRecipe}>{recipe.description}</Text>
+          <Text style={styles.infoStepsRecipe}>{recipe.description}</Text>
         </View>
       </View>
     </ScrollView>
   );
 };
 
+
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    flex: 1
+  },
   carouselContainer: {
     minHeight: 250,
   },
-
-  carousel: {},
-
   image: {
     ...StyleSheet.absoluteFillObject,
     width: "100%",
     height: 250,
   },
-
   imageContainer: {
     flex: 1,
     justifyContent: "center",
     width: viewportWidth,
-    height: 250,
+    height: 250
   },
-
   paginationContainer: {
     flex: 1,
     position: "absolute",
@@ -147,89 +149,90 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginTop: 200,
   },
-
   paginationDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     marginHorizontal: 0,
   },
-
   infoRecipeContainer: {
-    flex: 1,
-    margin: 20,
+    flex: 1,   
     marginTop: 10,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
-
+  infoFavoriteContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  
   infoContainer: {
-    //backgroundColor: 'red',
     flex: 1,
     flexDirection: "row",
     marginTop: 10,
     marginBottom: 10,
-    alignSelf: "center",
-    //justifyContent: 'flex-start',
+    alignSelf: "center"
   },
-
   buttonContainer: {
-    flex: 1,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center"
   },
-
   infoPhoto: {
     height: 20,
-    width: 20,
-    marginRight: 0,
+    width: 20    
   },
-
   infoRecipe: {
     fontSize: 14,
     fontWeight: "bold",
-    marginLeft: 5,
+    marginLeft: 5
   },
-
   subTittle: {
     fontSize: 17,
     fontWeight: "bold",
-    color: "#2cd18a",
-    alignSelf: "center",
+    color: "#2cd18a"    
   },
-
   infoDescriptionRecipe: {
-    //backgroundColor: 'red',
+    flex: 1,
+    textAlign: "left",
+    fontSize: 15,
+    marginTop: 1,
+    margin: 10,
+    marginBottom: 20
+  },
+  infoIngredientsRecipe: {
+    flex: 1,
+    textAlign: "left",
+    fontSize: 16  
+  },
+  infoDirectionsRecipe: {
+    flex: 1,
     textAlign: "left",
     fontSize: 16,
-    marginTop: 10,
-    margin: 15,
+    marginTop: 15
   },
-
   infoRecipeName: {
-    fontSize: 28,
+    fontSize: 30,
     margin: 10,
     fontWeight: "bold",
     color: "black",
     textAlign: "center",
-  },
-
-  infoRecipeContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-    marginTop: 50,
-    marginBottom: 50,
-  },
-
-  infoRecipeName: {
-    textAlign: "center",
-    fontSize: 28,
-    fontWeight: "bold",
     textDecorationLine: "underline",
   },
+  infoCategoryName: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "black",
+    textAlign: "center"   
+  },
+  infoStepsRecipe: {
+    flex: 1,
+    textAlign: 'justify',
+    fontSize: 15,
+    marginTop: 1,
+    margin: 20,
+    marginBottom: 10    
+  }  
 });
 
 export default RecipeDetail;
