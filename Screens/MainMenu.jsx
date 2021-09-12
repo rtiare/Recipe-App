@@ -6,13 +6,13 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 const Categories = props => {
-    const dispatch = useDispatch();
 
     const categories = useSelector(state => state.listCategories.categories);
+    const [search, setSearch] = useState('');
 
     const renderCategories = listItem => {
         return (
-            <TouchableHighlight underlayColor='rgba(73,182,77,0.9)' onPress={() => {
+            <TouchableHighlight underlayColor='#49b64d' onPress={() => {
                 props.navigation.navigate('Recipes', { id: listItem.item.id });
             }}>
                 <View style={styles.container}>
@@ -26,6 +26,12 @@ const Categories = props => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.row}>
+                <TextInput style={styles.searchBar} placeholder='Search...' value={search} onChangeText={(text) => setSearch(text)}/>
+                <TouchableOpacity onPress={() => props.navigation.navigate('RecipesSearch', {search: search})}>
+                    <Image style={styles.searchIcon} source={require('../assets/icons/search.png')}/>
+                </TouchableOpacity>
+            </View>            
             <FlatList
                 data={categories}
                 keyExtractor={(category) => category.id.toString()}
@@ -47,17 +53,16 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15,
         width : Dimensions.get('window').width - 10,
-        //height: Dimensions.get('window').height,
         borderColor: '#000000',
-        // borderWidth: 0.5,
-        // borderRadius: 15,
     },
+
     photo: {
         resizeMode: 'cover',
         width: Dimensions.get('window').width - 50,
         height: 360,
         borderRadius: 15,
     },
+
     title: {
         flex: 1,
         fontSize: 17,
@@ -68,7 +73,32 @@ const styles = StyleSheet.create({
         marginRight: 5,
         marginLeft: 5,
     },
+
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+
+    searchBar:{
+        width: Dimensions.get('window').width - 100,
+        textAlign: 'center',
+        color: '#72898c',
+        borderWidth: 2,
+        borderColor: "#000000",
+        marginBottom: 10,
+        borderColor: '#9fc0c4',
+        borderRadius: 13 ,
+        fontSize: 16,
+        backgroundColor : "#FFFFFF"
+ 
+    },
+
+    searchIcon: {
+        height: 30,
+        width: 30,
+    },
 });
+
 
 
 export default Categories;
