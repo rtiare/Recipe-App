@@ -19,34 +19,24 @@ import { toggleFavorite } from "../Store/actions/actionTypes";
 
 const Recipes = (props) => {
   const dispatch = useDispatch();
-
-  const toggleFavorites = (recipeId) =>
-    dispatch({ type: toggleFavorite, recipeId: recipeId });
-
+  const toggleFavorites = (recipeId) =>dispatch({ type: toggleFavorite, recipeId: recipeId });
+  const [fav, setFav] = useState('favorite');
   const favoriteRecipes = useSelector(
     (state) => state.listFavorites.favoriteRecipes
   );
 
   const renderRecipes = (listItem) => {
     return (
-      <TouchableHighlight
-        underlayColor="rgba(73,182,77,0.9)"
-        onPress={() => {
-          props.navigation.navigate("Recipe Details", {
-            recipeId: listItem.item.recipeId,
-          });
-        }}
-      >
-        <View style={styles.container}>
-          <Image
-            style={styles.photo}
-            source={{ uri: listItem.item.photo_url }}
-          />
-          <Text style={styles.title}>{listItem.item.title}</Text>
-          <Button
-            icon={<MaterialIcons name="favorite-border" size={24} color="white" />}
-            onPress={() => toggleFavorites(listItem.item.recipeId)}
-          />
+      <TouchableHighlight underlayColor="#49b64d" onPress={() => {
+          props.navigation.navigate("RecipeDetail", {recipeId: listItem.item.recipeId });
+      }}>
+          <View style={styles.container}>
+            <Image style={styles.photo} source={{ uri: listItem.item.photo_url }} />
+            <Text style={styles.title}>{listItem.item.title}</Text>
+         
+            <TouchableOpacity  onPress={() => toggleFavorites(listItem.item.recipeId)}>
+              <MaterialIcons name={fav} size={30} color='#2cd18a' />
+            </TouchableOpacity>
         </View>
       </TouchableHighlight>
     );
@@ -54,8 +44,10 @@ const Recipes = (props) => {
 
   const listEmpty = (listItem) => {
     return(
-      <View>
-        <Text>Nothing found!!</Text>
+      <View style={styles.emptyContainer}>
+        <Image source={require("../assets/icons/empty.png")} />
+        <Text style={styles.subMessage}>Nothing to Show</Text>
+        <Text style={styles.message}>Add Recipes to your Favorites!!!</Text>
       </View>
     );
   };
@@ -78,28 +70,44 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     width: Dimensions.get("window").width - 10,
-    //height: Dimensions.get('window').height,
-    borderColor: "#000000",
-    // borderWidth: 0.5,
-    // borderRadius: 15,
+    borderColor: "#000000"  
   },
   photo: {
     resizeMode: "cover",
     width: Dimensions.get("window").width - 50,
     height: 360,
-    borderRadius: 15,
+    borderRadius: 15
   },
   title: {
     flex: 1,
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     color: "#444444",
     marginTop: 3,
     marginRight: 5,
-    marginLeft: 5,
+    marginLeft: 5
   },
-
+  emptyContainer: {
+    flex: 1,    
+    justifyContent: "center",
+    alignItems: "center",   
+    width: Dimensions.get("window").width - 10,
+    borderColor: "#000000"  
+  },
+  subMessage: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "gray"    
+  },
+  message: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#2cd18a",
+    marginTop: 10,
+    marginRight: 5,
+    marginLeft: 5
+  },
 });
 
 export default Recipes;
