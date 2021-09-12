@@ -1,18 +1,9 @@
-import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  TouchableHighlight,
-  FlatList,
-} from "react-native";
+import React, {useEffect, useState} from "react";
+import { StyleSheet, ScrollView, Text, View, Image, Dimensions, TouchableHighlight, FlatList,TouchableOpacity } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
-import {toggleFavorite} from '../Store/actions/actionTypes';
+import { toggleFavorite } from "../Store/actions/actionTypes";
 
 const { width: viewportWidth } = Dimensions.get("window");
 
@@ -54,13 +45,19 @@ const RecipeDetail = (props) => {
     </TouchableHighlight>
   );
 
+  const renderIngredients = ({ item }) => (
+    <View style={styles.ingredients}>
+      <Text> {"\u27A4"} {"\t" + item.key}</Text>
+    </View>
+  );
+
   return (
     <ScrollView nestedScrollEnabled={true}>
       <View style={styles.carouselContainer}>
-        <View style={styles.carousel}>
+        <View>
           <Carousel
             layout={"default"}
-            layoutCardOffset={`9`}
+            
             ref={(c) => {
               _carousel = c;
             }}

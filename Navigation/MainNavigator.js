@@ -1,14 +1,15 @@
 import React from "react";
+import { TouchableOpacity } from 'react-native';
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import MainMenu from "../Screens/MainMenu";
 import Recipes from "../Screens/Recipes";
 import RecipeDetail from "../Screens/RecipeDetails";
+import RecipesSearch from "../Screens/RecipesSearch";
 import FavoriteRecipes from "../Screens/FavoriteRecipes";
-
-import { ColorPropType } from "react-native";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

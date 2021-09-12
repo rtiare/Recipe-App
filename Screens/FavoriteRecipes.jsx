@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   SafeAreaView,
   View,
@@ -8,12 +8,10 @@ import {
   Image,
   TouchableHighlight,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
-
-import Carousel, { Pagination } from "react-native-snap-carousel";
-import { Button } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 import { toggleFavorite } from "../Store/actions/actionTypes";
 

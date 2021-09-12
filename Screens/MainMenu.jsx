@@ -1,8 +1,8 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, Text, FlatList, Image, TouchableHighlight, Dimensions } from 'react-native';
-import { useState, useEffect } from "react";
+import { SafeAreaView, TextInput, TouchableOpacity, View, StyleSheet, Text, FlatList, Image, TouchableHighlight, Dimensions } from 'react-native';
+import { useState } from "react";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 const Categories = props => {
