@@ -6,16 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 const Recipes = props => {
-    useEffect(() => {
-        console.log()
-        const getCategory = async (id) => {
-            console.log('llego a ' + id)
-        }
-    }, []);
 
-    const dispatch = useDispatch();
-
-    //const toggleFavorites = (imdbID) => dispatch({type: toggleFavorite, imdbID: imdbID});
     const categoryId = props.route.params.id; 
 
     const recipes = useSelector(state => state.listRecipes.recipes).filter((recipe) => recipe.categoryId === categoryId);
@@ -23,7 +14,7 @@ const Recipes = props => {
     const renderRecipes = listItem => {
         return (
 
-            <TouchableHighlight underlayColor='rgba(73,182,77,0.9)' onPress={() => {
+            <TouchableHighlight underlayColor='#49b64d' onPress={() => {
                 props.navigation.navigate('RecipeDetail', { recipeId: listItem.item.recipeId });
             }}>
                 <View style={styles.container}>
@@ -48,8 +39,6 @@ const Recipes = props => {
 };
 
 const styles = StyleSheet.create({
-
-
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -58,10 +47,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15,
         width : Dimensions.get('window').width - 10,
-        //height: Dimensions.get('window').height,
         borderColor: '#000000',
-        // borderWidth: 0.5,
-        // borderRadius: 15,
     },
     photo: {
         resizeMode: 'cover',
@@ -71,7 +57,7 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 1,
-        fontSize: 17,
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#444444',
